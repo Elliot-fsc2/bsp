@@ -1,0 +1,124 @@
+name: deploy
+
+on:
+  workflow_run:
+    workflows: ['tests']
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.head_branch == 'master' &&
+       github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Deploy to production over SSH
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          REPO_URL: https://github.com/${{ github.repository }}.git
+          # CyberPanel's PHP CLI on this server. Override with a PHP_BIN secret.
+          PHP_BIN: ${{ secrets.PHP_BIN || '/usr/php63/bin/php' }}
+        run: |
+          set -euo pipefail
+          sudo apt-get install -y sshpass >/dev/null
+
+          sshpass -e ssh -o StrictHostKeyChecking=accept-new -o ServerAliveInterval=30 \
+            -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" \
+            "DEPLOY_PATH='$DEPLOY_PATH' REPO_URL='$REPO_URL' PHP_BIN='$PHP_BIN' bash -s" <<'REMOTE'
+          set -euo pipefail
+          cd "$DEPLOY_PATH"
+
+          if [ ! -x "$PHP_BIN" ]; then
+            echo "PHP_BIN=$PHP_BIN is not executable. List candidates with: ls -d /usr/php* /usr/local/lsws/lsphp*/bin/php 2>/dev/null" >&2
+            exit 1
+          fi
+          # This app requires PHP 8.3+ (composer.json). Fail loudly rather than
+          # half-deploying onto an older runtime.
+          if ! "$PHP_BIN" -r 'exit(PHP_VERSION_ID >= 80300 ? 0 : 1);'; then
+            echo "$PHP_BIN reports $("$PHP_BIN" -r 'echo PHP_VERSION;'), but this app needs PHP 8.3+." >&2
+            exit 1
+          fi
+
+          # The build tools shell out to bare 'php', and non-interactive ssh never
+          # reads ~/.bashrc, so put PHP_BIN's directory first on PATH.
+          export PATH="$(dirname "$PHP_BIN"):$PATH"
+
+          COMPOSER_BIN="$(command -v composer || echo /usr/local/bin/composer)"
+          if [ ! -f "$COMPOSER_BIN" ]; then
+            echo "composer not found on PATH or at /usr/local/bin/composer" >&2
+            exit 1
+          fi
+
+          if [ ! -d .git ]; then
+            if [ -z "$(ls -A .)" ]; then
+              git clone "$REPO_URL" .
+            else
+              echo "$DEPLOY_PATH is not a git checkout and is not empty. Point DEPLOY_PATH at the app's checkout." >&2
+              exit 1
+            fi
+          fi
+
+          if [ ! -f .env ]; then
+            echo "Missing $DEPLOY_PATH/.env - copy .env.example and run '$PHP_BIN artisan key:generate' on the server first." >&2
+            exit 1
+          fi
+
+          if ! grep -qE '^APP_KEY=.+' .env; then
+            echo "APP_KEY is empty in $DEPLOY_PATH/.env - run '$PHP_BIN artisan key:generate --force' on the server." >&2
+            exit 1
+          fi
+
+          # --render pre-renders the 503 page, so a visitor landing mid-install
+          # gets the maintenance page instead of a raw PHP error.
+          app_is_down=0
+          bring_app_up() {
+            if [ "$app_is_down" = "1" ]; then
+              "$PHP_BIN" artisan up || echo "WARNING: could not leave maintenance mode" >&2
+              app_is_down=0
+            fi
+          }
+          trap bring_app_up EXIT
+
+          "$PHP_BIN" artisan down --render="errors::503" --retry=60
+          app_is_down=1
+
+          # ponytail: reset --hard discards server-side edits; untracked files
+          # (.env, public/storage uploads) survive. Switch to release dirs if
+          # hotfixes must persist.
+          git fetch --prune "$REPO_URL" "+refs/heads/master:refs/remotes/deploy/master"
+          git reset --hard refs/remotes/deploy/master
+
+          "$PHP_BIN" "$COMPOSER_BIN" install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
+          npm ci --include=dev --no-audit --no-fund
+          npm run build
+
+          "$PHP_BIN" artisan migrate --force
+          "$PHP_BIN" artisan optimize:clear
+          "$PHP_BIN" artisan optimize
+          "$PHP_BIN" artisan storage:link --force || true
+
+          "$PHP_BIN" artisan up
+          app_is_down=0
+          REMOTE
