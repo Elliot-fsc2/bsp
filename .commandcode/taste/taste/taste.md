@@ -1,0 +1,22 @@
+# Taste
+- Gives terse, informal instructions (frequent typos, little context) and expects the agent to infer the full scope, ask targeted clarifying questions, and proceed. Confidence: 0.6
+- Expects layouts/pages to be responsive across all device sizes, and treats squeezed or horizontally-scrolling content (e.g. wide data tables on small screens) as a defect to fix. Confidence: 0.55
+- Trusts the agent's recommended defaults when scope choices are presented as explicit options (accepts the suggested "Recommended" path, including thorough/cleanup-heavy variants). Confidence: 0.55
+- Supplies replacement UI copy as exact block text and expects it inserted verbatim (not paraphrased or trimmed). Confidence: 0.45
+- Prefers lean, focused product scope — wants unneeded features stripped out rather than left dormant, and will remove whole feature areas on request. Confidence: 0.45
+- Dislikes arbitrary hard-coded caps on user-editable content — expects admin-authored input (e.g. dropdown option lists) to accept an unlimited number of entries rather than being limited to a fixed count. Confidence: 0.4
+- Expects configuration and third-party credentials (e.g. a Google Maps API key) to be editable through the admin settings UI rather than hard-coded. Confidence: 0.5
+- Wants admin list/table pages to be full CRUD managers, not read-only views: per-row View/Edit/Delete actions, an Add action, checkbox multi-select with bulk delete, and a detail popup modal. Confidence: 0.45
+- Prefers table row actions rendered as icon buttons (with titles/tooltips) rather than text buttons or text links, across admin tables like payments and applicants. Confidence: 0.5
+- Expects demo/mock seed data to be kept up to date with new schema fields and features so the UI shows realistic, complete sample data. Confidence: 0.4
+- Wants the registration form's captured data surfaced throughout the admin UI — as columns in member/applicant lists and as inputs in the shared edit form — so admin views stay in sync with the admin-configurable form rather than a fixed subset of fields. Confidence: 0.5
+- Prefers person names stored/edited as separate Last Name, Given Name, and Middle Name fields rather than a single combined full-name field. Confidence: 0.4
+- Expects a record's view/detail display to present the same field set as its edit form (one shared field source) and to reflect saved changes immediately, rather than showing a different or stale subset. Confidence: 0.4
+- Prefers actionable links to external/brand destinations (e.g. a Facebook profile, a pinned location on Google Maps) rendered as branded buttons with a logo/icon + label rather than plain text hyperlinks in view/detail UI. Confidence: 0.4
+- Expects admin edit forms to reuse the same rich input widgets as the public registration form (e.g. a Google Maps location picker for address instead of a plain text input), with a graceful plain-input fallback when the required config/API key is absent. Confidence: 0.45
+- Treats visual inconsistencies in data tables as defects to fix — e.g. header labels not lining up with their column values (numeric columns should have right-aligned headers matching right-aligned cells). Confidence: 0.4
+- Expects branded CTA buttons (e.g. Facebook, Google Maps) to render legibly — label and icon in the same brand-appropriate color (white on the brand background), icon not stretched/squished — and treats off-color text/icons on them as a defect to fix. Confidence: 0.35
+- Expects admin-configured branding (e.g. the academy name from Settings) to be reflected consistently across the UI rather than hard-coded — treating hardcoded brand text (e.g. logo text on the landing page) as something to replace with the settings value. Confidence: 0.45
+- Prefers self-service editing for end users: members should be able to edit their own data (e.g. profile/registration details) rather than those sections being read-only or admin-only (identity/account fields may stay locked). Confidence: 0.4
+- Wants rich, multi-criteria filtering on admin list pages (Members, Applicants, etc.) rather than a minimal panel — free-text search, dropdowns sourced from the configurable registration-form options, and date ranges — with Apply/Clear and a live result count. Confidence: 0.45
+- Values visual analytics in reports: expects graphs/charts (e.g. a time trend and a category breakdown) and KPI summary cards alongside the existing tabular report data. Confidence: 0.4

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "powershell",
+      "Shell(npm:*)",
+      "Shell(node node_modules/next/dist/bin/next dev)"
+    ],
+    "deny": [],
+    "defaultMode": "default"
+  }
+}

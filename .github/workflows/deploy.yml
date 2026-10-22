@@ -1,0 +1,113 @@
+name: deploy
+
+on:
+  workflow_run:
+    workflows: ['tests']
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.head_branch == 'master' &&
+       github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Deploy to production over SSH
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          PM2_APP: ${{ secrets.PM2_APP || 'bsplms' }}
+          REPO_URL: https://github.com/${{ github.repository }}.git
+        run: |
+          set -euo pipefail
+          sudo apt-get install -y sshpass >/dev/null
+
+          sshpass -e ssh -o StrictHostKeyChecking=accept-new -o ServerAliveInterval=30 \
+            -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" \
+            "DEPLOY_PATH='$DEPLOY_PATH' REPO_URL='$REPO_URL' PM2_APP='$PM2_APP' bash -s" <<'REMOTE'
+          set -euo pipefail
+          cd "$DEPLOY_PATH"
+
+          if ! command -v node >/dev/null || ! command -v npm >/dev/null; then
+            echo "Node.js/npm not found on PATH for $SSH_USER." >&2
+            exit 1
+          fi
+          if ! node -e 'const [a,b]=process.versions.node.split(".").map(Number); process.exit(a>20||(a===20&&b>=9)?0:1)'; then
+            echo "Node $(node -v) is too old; this app needs Node 20.9+." >&2
+            exit 1
+          fi
+          if ! command -v pm2 >/dev/null; then
+            echo "pm2 not found on PATH; install it with 'npm i -g pm2'." >&2
+            exit 1
+          fi
+
+          if [ ! -d .git ]; then
+            if [ -z "$(ls -A .)" ]; then
+              git clone "$REPO_URL" .
+            else
+              echo "$DEPLOY_PATH is not a git checkout and is not empty. Point DEPLOY_PATH at the app's checkout." >&2
+              exit 1
+            fi
+          fi
+
+          # The Laravel app's .env survives `git reset --hard`, but it has no
+          # DATABASE_URL. Fail before touching the build instead of deploying a
+          # process that cannot reach MySQL.
+          if [ ! -f .env ]; then
+            echo "Missing $DEPLOY_PATH/.env - copy .env.example and set DATABASE_URL." >&2
+            exit 1
+          fi
+          if ! grep -qE '^DATABASE_URL=mysql://.+' .env; then
+            echo "DATABASE_URL is missing or not MySQL in $DEPLOY_PATH/.env" >&2
+            exit 1
+          fi
+
+          # ponytail: reset --hard discards server-side edits; untracked files
+          # (.env, uploads) survive. Switch to release dirs if hotfixes must persist.
+          git fetch --prune "$REPO_URL" "+refs/heads/master:refs/remotes/deploy/master"
+          git reset --hard refs/remotes/deploy/master
+
+          npm ci --include=dev --no-audit --no-fund
+          npm run build
+          npm run db:migrate
+
+          # Start the process once if it does not exist yet; restart it after.
+          if pm2 describe "$PM2_APP" >/dev/null 2>&1; then
+            pm2 restart "$PM2_APP" --update-env
+          else
+            pm2 start npm --name "$PM2_APP" -- start
+          fi
+          pm2 save || true
+
+          for _ in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:3000/api/health >/dev/null; then
+              echo "Health check passed"
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "Health check failed; recent logs:" >&2
+          pm2 logs "$PM2_APP" --lines 40 --nostream || true
+          exit 1
+          REMOTE
