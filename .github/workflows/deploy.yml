@@ -132,9 +132,11 @@ jobs:
           node scripts/baseline-migrations.mjs
           npm run db:migrate
 
-          # ecosystem.config.cjs reads PORT from .env; startOrReload covers
-          # both the first start and later restarts.
-          pm2 startOrReload ecosystem.config.cjs --update-env
+          # ecosystem.config.cjs reads PORT/PM2_INSTANCES from .env.
+          # startOrReload keeps the old worker count, so restart cleanly to
+          # apply instance changes (e.g. scaling "max" down to 1).
+          pm2 delete "$PM2_APP" >/dev/null 2>&1 || true
+          pm2 start ecosystem.config.cjs --update-env
           pm2 save || true
 
           APP_PORT="$(sed -n 's/^PORT=//p' .env | tail -n 1 | tr -d '\"')"
