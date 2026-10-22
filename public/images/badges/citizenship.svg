@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Citizenship merit badge">
+  <circle cx="100" cy="100" r="97" fill="#12305a"/>
+  <circle cx="100" cy="100" r="88" fill="#1d4e89"/>
+  <circle cx="100" cy="100" r="88" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.5"/>
+  <circle cx="100" cy="100" r="70" fill="#fdf6d8"/>
+  <rect x="70" y="58" width="8" height="86" rx="4" fill="#1d4e89"/>
+  <path d="M78 66 c26 -12 52 10 78 -2 v36 c-26 12 -52 -10 -78 2 z" fill="#fdf6d8"/>
+  <path d="M78 66 c26 -12 52 10 78 -2 v36 c-26 12 -52 -10 -78 2 z" fill="none" stroke="#1d4e89" stroke-width="3"/>
+  <path d="M78 80 c26 -12 52 10 78 -2 v12 c-26 12 -52 -10 -78 2 z" fill="#c1121f"/>
+  <path d="M104 70l3 7 7.5 .6-5.7 4.7 2 7.6-6.8-4-6.8 4 2-7.6-5.7-4.7 7.5-.6z" fill="#c9a227"/>
+</svg>

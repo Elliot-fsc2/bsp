@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Community Service merit badge">
+  <circle cx="100" cy="100" r="97" fill="#453a52"/>
+  <circle cx="100" cy="100" r="88" fill="#7b6d8d"/>
+  <circle cx="100" cy="100" r="88" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.5"/>
+  <circle cx="100" cy="100" r="70" fill="#fdf6d8"/>
+  <path d="M100 142 C64 118 58 92 74 78 C88 66 100 78 100 86 C100 78 112 66 126 78 C142 92 136 118 100 142 Z" fill="#7b6d8d"/>
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Campcraft merit badge">
+  <circle cx="100" cy="100" r="97" fill="#6f3d12"/>
+  <circle cx="100" cy="100" r="88" fill="#bc6c25"/>
+  <circle cx="100" cy="100" r="88" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.5"/>
+  <circle cx="100" cy="100" r="70" fill="#fdf6d8"/>
+  <path d="M74 138 L100 74 L126 138 Z" fill="#bc6c25"/>
+  <path d="M100 74 L100 138" stroke="#fdf6d8" stroke-width="5"/>
+  <path d="M90 138 L100 112 L110 138 Z" fill="#fdf6d8"/>
+  <path d="M138 138 C128 126 133 110 138 100 C148 110 152 126 138 138 Z" fill="#c9a227"/>
+</svg>

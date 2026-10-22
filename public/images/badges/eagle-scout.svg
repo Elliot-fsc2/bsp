@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="EAGLE rank patch, Senior Scouts">
+  <title>EAGLE — Senior Scouts rank patch</title>
+  <circle cx="100" cy="105" r="94" fill="#0b2e1c" opacity="0.16"/>
+  <circle cx="100" cy="100" r="94" fill="#7a121c"/>
+  <circle cx="100" cy="100" r="86" fill="#b21e2b"/>
+  <circle cx="100" cy="100" r="79" fill="none" stroke="#ffffff" stroke-width="2" stroke-dasharray="5 6" opacity="0.55"/>
+  <circle cx="100" cy="100" r="62" fill="#fdf8ec" stroke="#7a121c" stroke-width="2" stroke-opacity="0.3"/>
+  <g transform="translate(100 60) scale(0.66)">
+    <path d="M0 13 L-16 33 H16 Z" fill="#1b6b3a"/>
+    <ellipse cx="0" cy="-14" rx="12" ry="16.5" fill="#ffffff" stroke="#7a121c" stroke-width="2.6"/>
+    <ellipse cx="-16" cy="0" rx="11.5" ry="15.5" fill="#0038a8" transform="rotate(-42 -16 0)"/>
+    <ellipse cx="16" cy="0" rx="11.5" ry="15.5" fill="#ce1126" transform="rotate(42 16 0)"/>
+    <circle cx="0" cy="3" r="4.6" fill="#fcd116"/>
+    <circle cx="-7" cy="-4" r="1.7" fill="#fcd116"/>
+    <circle cx="7" cy="-4" r="1.7" fill="#fcd116"/>
+  </g>
+  <g transform="translate(100 106) scale(1)"><g transform="scale(0.78)" fill="#7a121c">
+    <path d="M0 -7c-4.5 0-7.5 3-7.5 7.5 0 7 4.5 13 7.5 19.5 3-6.5 7.5-12.5 7.5-19.5C7.5 -4 4.5 -7 0 -7z"/>
+    <path d="M-6.5 -1C-16 -9 -26 -11 -34 -8c7 7 15 11 24 13z"/>
+    <path d="M6.5 -1C16 -9 26 -11 34 -8c-7 7-15 11-24 13z"/>
+    <path d="M0 19 L-6 31 L0 26 L6 31 Z"/>
+  </g></g>
+  <text x="100" y="142" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="11.5" font-weight="700" letter-spacing="0.6" fill="#7a121c" textLength="60" lengthAdjust="spacingAndGlyphs">EAGLE</text>
+  <g><polygon points="75,147.7 76.1,150.5 79.1,150.7 76.7,152.6 77.5,155.5 75,153.8 72.5,155.5 73.3,152.6 70.9,150.7 73.9,150.5" fill="#fcd116" stroke="#8a6d00" stroke-width="0.8"/><polygon points="85,147.7 86.1,150.5 89.1,150.7 86.7,152.6 87.5,155.5 85,153.8 82.5,155.5 83.3,152.6 80.9,150.7 83.9,150.5" fill="#fcd116" stroke="#8a6d00" stroke-width="0.8"/><polygon points="95,147.7 96.1,150.5 99.1,150.7 96.7,152.6 97.5,155.5 95,153.8 92.5,155.5 93.3,152.6 90.9,150.7 93.9,150.5" fill="#fcd116" stroke="#8a6d00" stroke-width="0.8"/><polygon points="105,147.7 106.1,150.5 109.1,150.7 106.7,152.6 107.5,155.5 105,153.8 102.5,155.5 103.3,152.6 100.9,150.7 103.9,150.5" fill="#fcd116" stroke="#8a6d00" stroke-width="0.8"/><polygon points="115,147.7 116.1,150.5 119.1,150.7 116.7,152.6 117.5,155.5 115,153.8 112.5,155.5 113.3,152.6 110.9,150.7 113.9,150.5" fill="#fcd116" stroke="#8a6d00" stroke-width="0.8"/><polygon points="125,147.7 126.1,150.5 129.1,150.7 126.7,152.6 127.5,155.5 125,153.8 122.5,155.5 123.3,152.6 120.9,150.7 123.9,150.5" fill="#fcd116" stroke="#8a6d00" stroke-width="0.8"/></g>
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="First Aid merit badge">
+  <circle cx="100" cy="100" r="97" fill="#7a2323"/>
+  <circle cx="100" cy="100" r="88" fill="#bc4749"/>
+  <circle cx="100" cy="100" r="88" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.5"/>
+  <circle cx="100" cy="100" r="70" fill="#fdf6d8"/>
+  <path d="M85 55 h30 v23 h23 v30 h-23 v23 h-30 v-23 h-23 v-30 h23 z" fill="#bc4749"/>
+</svg>

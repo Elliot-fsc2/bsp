@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Boy Scouts of the Philippines trefoil emblem">
+  <circle cx="64" cy="64" r="61" fill="#2d6a4f"/>
+  <circle cx="64" cy="64" r="61" fill="none" stroke="#1b4332" stroke-width="6"/>
+  <circle cx="64" cy="64" r="52" fill="none" stroke="#74c69d" stroke-width="2" opacity="0.6"/>
+  <g fill="#ffd166">
+    <path d="M64 20c12 0 20 10 20 22 0 10-9 16-20 16s-20-6-20-16c0-12 8-22 20-22z"/>
+    <path d="M64 20c12 0 20 10 20 22 0 10-9 16-20 16s-20-6-20-16c0-12 8-22 20-22z" transform="rotate(120 64 64)"/>
+    <path d="M64 20c12 0 20 10 20 22 0 10-9 16-20 16s-20-6-20-16c0-12 8-22 20-22z" transform="rotate(240 64 64)"/>
+  </g>
+  <rect x="40" y="70" width="48" height="12" rx="6" fill="#c9a227"/>
+  <circle cx="64" cy="76" r="4" fill="#2d6a4f"/>
+  <g fill="#fdf6d8">
+    <path d="M28 68l2.4 6.4L37 77l-6.6 2.6L28 86l-2.4-6.4L19 77l6.6-2.6z"/>
+    <path d="M100 68l2.4 6.4L109 77l-6.6 2.6L100 86l-2.4-6.4L91 77l6.6-2.6z"/>
+  </g>
+</svg>

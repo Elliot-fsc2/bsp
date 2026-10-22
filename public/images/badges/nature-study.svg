@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Nature Study merit badge">
+  <circle cx="100" cy="100" r="97" fill="#1f5c3d"/>
+  <circle cx="100" cy="100" r="88" fill="#52b788"/>
+  <circle cx="100" cy="100" r="88" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.5"/>
+  <circle cx="100" cy="100" r="70" fill="#fdf6d8"/>
+  <path d="M100 52 C136 66 140 106 100 146 C60 106 64 66 100 52 Z" fill="#40916c"/>
+  <path d="M100 56 L100 142" stroke="#fdf6d8" stroke-width="5"/>
+  <path d="M84 84 L100 96 L116 84" fill="none" stroke="#fdf6d8" stroke-width="4"/>
+  <path d="M82 106 L100 118 L118 106" fill="none" stroke="#fdf6d8" stroke-width="4"/>
+</svg>

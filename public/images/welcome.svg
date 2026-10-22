@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 700" role="img" aria-label="A Scout camp with a tent, trees and a campfire">
+  <defs>
+    <linearGradient id="wsky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#eef9f2"/>
+      <stop offset="1" stop-color="#cfe9da"/>
+    </linearGradient>
+    <g id="wp">
+      <rect x="-6" y="26" width="12" height="24" rx="3" fill="#6b4f2a"/>
+      <path d="M0 -66 L28 8 H-28 Z" fill="#2d6a4f"/>
+      <path d="M0 -32 L20 30 H-20 Z" fill="#1b4332"/>
+    </g>
+  </defs>
+
+  <rect width="900" height="700" fill="url(#wsky)"/>
+  <circle cx="700" cy="140" r="66" fill="#ffd166"/>
+  <circle cx="700" cy="140" r="98" fill="#ffd166" opacity="0.22"/>
+
+  <path d="M0 430 Q180 372 380 418 T900 410 L900 700 L0 700 Z" fill="#b7e4c7"/>
+  <path d="M0 512 Q220 452 460 500 T900 492 L900 700 L0 700 Z" fill="#74c69d"/>
+  <path d="M0 596 Q260 548 520 586 T900 578 L900 700 L0 700 Z" fill="#40916c"/>
+
+  <use href="#wp" transform="translate(150 566) scale(1.15)"/>
+  <use href="#wp" transform="translate(232 584) scale(0.85)"/>
+  <use href="#wp" transform="translate(760 574) scale(1.05)"/>
+
+  <g>
+    <path d="M330 604 L470 392 L610 604 Z" fill="#f4e3b2" stroke="#c9a227" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M470 392 L470 604" stroke="#c9a227" stroke-width="10"/>
+    <path d="M424 604 L470 500 L516 604 Z" fill="#2d6a4f"/>
+  </g>
+
+  <g transform="translate(680 594)">
+    <rect x="-44" y="10" width="88" height="11" rx="5" fill="#6b4f2a"/>
+    <rect x="-32" y="2" width="64" height="10" rx="5" fill="#4a3520" transform="rotate(-8)"/>
+    <path d="M0 4 C-26 -14 -16 -48 0 -64 C16 -48 26 -14 0 4 Z" fill="#ff8c42"/>
+    <path d="M0 -4 C-14 -16 -8 -38 0 -48 C8 -38 14 -16 0 -4 Z" fill="#ffd166"/>
+  </g>
+
+  <g transform="translate(450 150)">
+    <circle cx="0" cy="0" r="74" fill="#2d6a4f"/>
+    <circle cx="0" cy="0" r="74" fill="none" stroke="#1b4332" stroke-width="7"/>
+    <g fill="#ffd166">
+      <path d="M0 -52c9 0 15 8 15 17 0 8-7 12-15 12s-15-4-15-12c0-9 6-17 15-17z"/>
+      <path d="M0 -52c9 0 15 8 15 17 0 8-7 12-15 12s-15-4-15-12c0-9 6-17 15-17z" transform="rotate(120 0 0)"/>
+      <path d="M0 -52c9 0 15 8 15 17 0 8-7 12-15 12s-15-4-15-12c0-9 6-17 15-17z" transform="rotate(240 0 0)"/>
+    </g>
+    <rect x="-19" y="6" width="38" height="10" rx="5" fill="#c9a227"/>
+    <g fill="#fdf6d8">
+      <path d="M-46 2l2 5 5 .5-4 4 1.5 5-4.5-3-4.5 3 1.5-5-4-4 5-.5z"/>
+      <path d="M46 2l2 5 5 .5-4 4 1.5 5-4.5-3-4.5 3 1.5-5-4-4 5-.5z"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Knot Tying merit badge">
+  <circle cx="100" cy="100" r="97" fill="#1e4d39"/>
+  <circle cx="100" cy="100" r="88" fill="#40916c"/>
+  <circle cx="100" cy="100" r="88" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.5"/>
+  <circle cx="100" cy="100" r="70" fill="#fdf6d8"/>
+  <g fill="none" stroke="#2d6a4f" stroke-width="11" stroke-linecap="round">
+    <ellipse cx="82" cy="100" rx="22" ry="34" transform="rotate(-24 82 100)"/>
+    <ellipse cx="118" cy="100" rx="22" ry="34" transform="rotate(24 118 100)"/>
+  </g>
+</svg>

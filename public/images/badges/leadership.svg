@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Leadership merit badge">
+  <circle cx="100" cy="100" r="97" fill="#7a6412"/>
+  <circle cx="100" cy="100" r="88" fill="#c9a227"/>
+  <circle cx="100" cy="100" r="88" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.5"/>
+  <circle cx="100" cy="100" r="70" fill="#fdf6d8"/>
+  <circle cx="100" cy="100" r="42" fill="none" stroke="#c9a227" stroke-width="7"/>
+  <path d="M100 56 l12 32 32 12 -32 12 -12 32 -12 -32 -32 -12 32 -12z" fill="#c9a227"/>
+  <circle cx="100" cy="100" r="7" fill="#fdf6d8"/>
+</svg>

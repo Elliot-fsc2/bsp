@@ -1,0 +1,23 @@
+# Taste
+- Prefers MySQL as the database for their web projects (asked to migrate an existing PostgreSQL/Drizzle project over to MySQL). Confidence: 0.5
+- Runs/develops projects locally on Windows with XAMPP (uses XAMPP's bundled MySQL/MariaDB on port 3306, phpMyAdmin, root with empty password). Confidence: 0.7
+- Wants a written setup/run guide (e.g. a README) covering the local environment, not just code changes. Confidence: 0.4
+- Prefers TinyMCE as the rich-text editor, and expects it to be feature-complete — including image/video upload from the toolbar and the ability to link out to Google Drive. Confidence: 0.6
+- References Moodle as the UX benchmark for their LMS (e.g. wanting the rich-text editor to mirror Moodle's TinyMCE: full menu bar, paragraph-styles dropdown, wrapped sticky toolbar rows, word count, and insert dialogs on a self-hosted editor). Confidence: 0.5
+- Expects admin panels to offer full CRUD (add, edit, and delete) over content entities such as categories, badges, and requirements — not just add or edit. Confidence: 0.5
+- Prefers add/edit/delete forms and similar content interactions to open in modal popups rather than inline forms or separate pages — applies system-wide ("in all modules"), including dashboard panels. Confidence: 0.75
+- Prefers selecting from records that already exist over creating/provisioning new ones — e.g. attaching a merit badge as a requirement should be a simple picker of already-created merit badges, not a full create form. Confidence: 0.65
+- Prefers pickers (e.g. choosing a merit badge) to be searchable, clickable button/grid selection — one click to pick — rather than a plain dropdown/select. Confidence: 0.6
+- Prefers admin forms trimmed to only the fields the user must actually choose: fields whose value is already fixed by context (e.g. Program/Kind on a badge's own edit page) should be hidden rather than shown. Confidence: 0.5
+- Wants side navigation to be collapsible/minimizable via a toggle button (icons-only rail when collapsed) rather than always fixed at full width. Confidence: 0.45
+- Cares about the ordering of navigation items, expecting it grouped/ordered by workflow rather than arbitrary. Confidence: 0.4
+- Wants a pointer (hand) cursor on hover over all clickable/interactive elements — buttons, links, chips, toggles, etc. — so they look clickable, with `not-allowed` on disabled controls. Confidence: 0.5
+- Prefers action buttons right-aligned — page-header actions and form/popup submit buttons sit on the right edge (exceptions: full-width primary/auth buttons and nav/log-out links). Confidence: 0.45
+- Reports bugs by pasting the raw framework error output (error message, component stack, and code frame) verbatim rather than describing the symptom in their own words. Confidence: 0.4
+- Writes terse, run-on, unpunctuated requests that bundle several features/bug fixes into one sentence, expecting the agent to infer the details and implement all of them. Confidence: 0.45
+- Expects the LMS to be fully responsive across mobile and tablet, not desktop-only — layout, spacing, and hidden/revealed controls should adapt at small breakpoints. Confidence: 0.55
+- Wants a fixed bottom navigation bar on mobile/tablet, with an extra "More" item that opens the full drawer. Confidence: 0.55
+- Wants floating overlays (notification panel, dropdowns, popups) to always render above page content and never be clipped or overlapped by cards/parents (e.g. via a portal to document.body). Confidence: 0.5
+- Prefers dashboard widgets to show only the single latest item (e.g. one latest news post) with a "View all" link to the full list, rather than listing everything inline. Confidence: 0.5
+- Prefers a month-grid calendar (Sun–Sat layout with prev/Today/next navigation) over a list-style calendar, with each activity individually clickable to open its details. Confidence: 0.5
+- Wants site branding — the logo and the browser-tab favicon — to be configurable from the Admin settings page (via image upload), not hard-coded. Confidence: 0.45
