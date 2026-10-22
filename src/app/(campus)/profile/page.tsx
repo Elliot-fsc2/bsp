@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { disconnectDriveAction } from "@/actions/google";
 import { Modal } from "@/components/Modal";
 import { ProfileForm } from "@/components/ProfileForm";
@@ -82,9 +81,11 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
             <p className="text-sm text-[var(--muted)]">
               You have not connected a Google account yet. Uploads go to the council server for now.
             </p>
-            <Link href="/api/google/connect" className="bloom-btn ml-auto">
+            {/* A plain <a>: this endpoint 302s to Google, so it must be a real
+                navigation, not a Next Link prefetch/RSC fetch (which CORS-blocks). */}
+            <a href="/api/google/connect" className="bloom-btn ml-auto">
               Connect Google Drive
-            </Link>
+            </a>
           </div>
         )}
 
