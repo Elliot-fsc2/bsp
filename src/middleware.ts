@@ -19,6 +19,16 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // OpenLiteSpeed can forward Origin twice ("https://host, https://host").
+  // Node joins duplicate headers with ", ", and Next's Server Action check does
+  // `new URL(origin)`, which then throws and returns 500 (e.g. on logout).
+  const origin = request.headers.get("origin");
+  if (origin?.includes(",")) {
+    const headers = new Headers(request.headers);
+    headers.set("origin", origin.split(",")[0].trim());
+    return NextResponse.next({ request: { headers } });
+  }
+
   return NextResponse.next();
 }
 

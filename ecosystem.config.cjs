@@ -3,6 +3,8 @@ require("dotenv/config");
 // Port comes from the environment (.env, shell, or CI secret) so the same
 // checkout can run on any port. Falls back to 3000 for local use.
 const PORT = process.env.PORT ?? "3000";
+// One worker is enough for this app; set PM2_INSTANCES=2+ to scale out.
+const INSTANCES = Math.max(1, Number(process.env.PM2_INSTANCES) || 1);
 
 module.exports = {
   apps: [
@@ -11,7 +13,7 @@ module.exports = {
       script: "node_modules/next/dist/bin/next",
       args: `start -p ${PORT}`,
       cwd: "./",
-      instances: "max",
+      instances: INSTANCES,
       exec_mode: "cluster",
       autorestart: true,
       watch: false,
