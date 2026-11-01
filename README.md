@@ -238,6 +238,26 @@ Other seeded accounts: `rosario@bsp.org.ph`, `ernesto@bsp.org.ph`, `lucia@bsp.or
 
 ---
 
+## Migrations
+
+Every push to `master` runs `npm run db:migrate` against production, so a
+migration is applied the moment it lands. Migrations are **append-only**:
+
+- never delete or edit a migration that has already shipped - deleting the file
+  does not undo it on the server, and the live schema then disagrees with
+  `src/db/schema.ts` (pages 500 with a server-components error while
+  `/api/health` still returns 200);
+- to change your mind, add a new migration that reverses the old one:
+
+  ```bash
+  npx drizzle-kit generate --custom --name=revert_whatever_it_did
+  # then paste the reversing ALTER statements into the new file
+  ```
+
+CI fails a push that deletes or edits an applied migration, and the deploy
+health check renders `/` so a schema mismatch fails the deploy instead of
+passing quietly.
+
 ## How the data layer works
 
 - `src/db/schema.ts` — table definitions (Drizzle `mysql-core`): `programs`, `badge_categories`,
