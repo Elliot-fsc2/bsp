@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createBadgeAction, deleteBadgeAction, moveBadgeAction, updateBadgeAction } from "@/actions/admin";
 import { BadgeForm } from "@/components/BadgeForm";
+import { BadgeImage } from "@/components/BadgeImage";
 import { Modal } from "@/components/Modal";
 import { PageHeader } from "@/components/ui";
 import { requireRole } from "@/lib/auth";
@@ -29,7 +30,7 @@ function RankRow({
   return (
     <div className="bloom-card flex flex-wrap items-center gap-3 p-3">
       <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white font-extrabold">{index + 1}</span>
-      {badge.imageUrl ? <img src={badge.imageUrl} alt="" className="h-10 w-10" /> : <span className="text-2xl">⚜️</span>}
+      <BadgeImage src={badge.imageUrl} className="h-10 w-10" fallback={<span className="text-2xl">⚜️</span>} />
       <div className="min-w-0 flex-1">
         <p className="font-extrabold">
           {badge.name}

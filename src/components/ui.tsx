@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { BadgeImage } from "@/components/BadgeImage";
 import { toPlainText } from "@/lib/richtext";
 import { initials, roleLabel } from "@/lib/utils";
 import type { Role } from "@/lib/types";
@@ -126,20 +127,18 @@ export function BadgeCard({ badge }: { badge: BadgeCardData }) {
         className="relative flex h-36 items-center justify-center"
         style={{ background: `linear-gradient(135deg, ${badge.programColor}22, ${badge.programColor}55)` }}
       >
-        {badge.imageUrl ? (
-          <img
-            src={badge.imageUrl}
-            alt=""
-            className={`h-28 w-28 drop-shadow transition duration-300 group-hover:scale-105 ${badge.locked ? "opacity-40 grayscale" : ""}`}
-          />
-        ) : (
-          <span
-            className={`grid h-24 w-24 place-items-center rounded-full text-4xl ${badge.locked ? "opacity-40 grayscale" : ""}`}
-            style={{ background: badge.programColor }}
-          >
-            {badge.kind === "merit" ? "🎖️" : "⚜️"}
-          </span>
-        )}
+        <BadgeImage
+          src={badge.imageUrl}
+          className={`h-28 w-28 drop-shadow transition duration-300 group-hover:scale-105 ${badge.locked ? "opacity-40 grayscale" : ""}`}
+          fallback={
+            <span
+              className={`grid h-24 w-24 place-items-center rounded-full text-4xl ${badge.locked ? "opacity-40 grayscale" : ""}`}
+              style={{ background: badge.programColor }}
+            >
+              {badge.kind === "merit" ? "🎖️" : "⚜️"}
+            </span>
+          }
+        />
         {typeof badge.rankStep === "number" ? (
           <span className="chip absolute top-3 left-3 bg-white/90">
             Rank {badge.rankStep}
@@ -194,11 +193,11 @@ export function RankLadder({ ranks, disabled = false }: { ranks: BadgeCardData[]
             >
               {index + 1}
             </span>
-            {badge.imageUrl ? (
-              <img src={badge.imageUrl} alt="" className={`h-10 w-10 ${badge.locked ? "opacity-40 grayscale" : ""}`} />
-            ) : (
-              <span className={`text-2xl ${badge.locked ? "opacity-40 grayscale" : ""}`}>⚜️</span>
-            )}
+            <BadgeImage
+              src={badge.imageUrl}
+              className={`h-10 w-10 ${badge.locked ? "opacity-40 grayscale" : ""}`}
+              fallback={<span className={`text-2xl ${badge.locked ? "opacity-40 grayscale" : ""}`}>⚜️</span>}
+            />
             <span className="min-w-0 flex-1">
               <span className="block font-extrabold">
                 {badge.name}

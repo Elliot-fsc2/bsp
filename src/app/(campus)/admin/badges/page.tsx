@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BadgeForm } from "@/components/BadgeForm";
+import { BadgeImage } from "@/components/BadgeImage";
 import { Modal } from "@/components/Modal";
 import { PageHeader } from "@/components/ui";
 import { requireRole } from "@/lib/auth";
@@ -45,7 +46,11 @@ export default async function AdminBadgesPage() {
             <div className="space-y-2">
               {programBadges.map((badge) => (
                 <div key={badge.id} className="bloom-card flex flex-wrap items-center gap-3 p-3">
-                  {badge.imageUrl ? <img src={badge.imageUrl} alt="" className="h-10 w-10" /> : <span className="text-xl">🎖️</span>}
+                  <BadgeImage
+                    src={badge.imageUrl}
+                    className="h-10 w-10"
+                    fallback={<span className="text-xl">🎖️</span>}
+                  />
                   <div className="min-w-0 flex-1">
                     <p className="font-extrabold">{badge.name}</p>
                     <p className="text-xs text-[var(--muted)]">

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { addMeritRequirementAction } from "@/actions/admin";
+import { BadgeImage } from "@/components/BadgeImage";
 
 export type MeritOption = {
   id: number;
@@ -71,11 +72,7 @@ export function MeritRequirementPicker({
               value={merit.id}
               className="flex items-center gap-3 rounded-2xl border-2 border-transparent bg-white/80 p-3 text-left transition hover:border-[var(--primary)]"
             >
-              {merit.imageUrl ? (
-                <img src={merit.imageUrl} alt="" className="h-10 w-10" />
-              ) : (
-                <span className="text-xl">🎖️</span>
-              )}
+              <BadgeImage src={merit.imageUrl} className="h-10 w-10" fallback={<span className="text-xl">🎖️</span>} />
               <span className="min-w-0">
                 <span className="block truncate font-extrabold">{merit.name}</span>
                 <span className="block truncate text-xs text-[var(--muted)]">{merit.programName}</span>

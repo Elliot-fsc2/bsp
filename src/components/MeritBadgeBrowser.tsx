@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { toPlainText } from "@/lib/richtext";
+import { BadgeImage } from "@/components/BadgeImage";
 import type { BadgeCardData } from "@/components/ui";
 
 function actionFor(badge: BadgeCardData) {
@@ -122,13 +123,15 @@ export function MeritBadgeBrowser({
                 className="relative flex h-40 items-center justify-center"
                 style={{ background: `linear-gradient(135deg, ${badge.programColor}22, ${badge.programColor}55)` }}
               >
-                {badge.imageUrl ? (
-                  <img src={badge.imageUrl} alt="" className="h-28 w-28 drop-shadow" />
-                ) : (
-                  <span className="grid h-24 w-24 place-items-center rounded-full text-4xl" style={{ background: badge.programColor }}>
-                    🎖️
-                  </span>
-                )}
+                <BadgeImage
+                  src={badge.imageUrl}
+                  className="h-28 w-28 drop-shadow"
+                  fallback={
+                    <span className="grid h-24 w-24 place-items-center rounded-full text-4xl" style={{ background: badge.programColor }}>
+                      🎖️
+                    </span>
+                  }
+                />
                 {badge.earned ? <span className="sticker absolute top-3 right-3">Earned</span> : null}
                 {badge.categoryName ? (
                   <span className="chip absolute bottom-3 left-3 text-[10px]" style={{ background: `${badge.categoryColor ?? "#2d6a4f"}22` }}>

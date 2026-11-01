@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AdvancementTimeline } from "@/components/AdvancementTimeline";
+import { BadgeImage } from "@/components/BadgeImage";
 import { PageHeader } from "@/components/ui";
 import { requireUser } from "@/lib/auth";
 import { getAdvancement, getMySubmissions } from "@/lib/queries";
@@ -47,7 +48,7 @@ export default async function MyAdvancementPage() {
               href={item.requirementId ? `/advancement/requirement/${item.requirementId}` : `/advancement/badge/${item.badgeId}`}
               className="bloom-card flex flex-wrap items-center gap-3 p-4"
             >
-              {item.badgeImage ? <img src={item.badgeImage} alt="" className="h-11 w-11" /> : <span className="text-2xl">🎖️</span>}
+              <BadgeImage src={item.badgeImage} className="h-11 w-11" fallback={<span className="text-2xl">🎖️</span>} />
               <div className="min-w-0 flex-1">
                 <p className="font-extrabold">{item.requirementTitle ?? `${item.badgeName} — badge application`}</p>
                 <p className="text-xs text-[var(--muted)]">

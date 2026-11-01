@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CheckCircle2, Play, Clock, XCircle, Award } from "lucide-react";
 import { PageHeader } from "@/components/ui";
+import { BadgeImage } from "@/components/BadgeImage";
 import { RichText } from "@/components/RichText";
 import { submitBadgeApplicationAction } from "@/actions/advancement";
 import { requireUser } from "@/lib/auth";
@@ -46,13 +47,15 @@ export default async function BadgePage({ params }: { params: Promise<{ id: stri
       </div>
 
       <section className="bloom-card mb-5 flex flex-wrap items-center gap-5 p-6">
-        {badge.imageUrl ? (
-          <img src={badge.imageUrl} alt="" className="h-24 w-24" />
-        ) : (
-          <span className="grid h-20 w-20 place-items-center rounded-full text-4xl" style={{ background: badge.programColor }}>
-            {badge.kind === "merit" ? "🎖️" : "⚜️"}
-          </span>
-        )}
+        <BadgeImage
+          src={badge.imageUrl}
+          className="h-24 w-24"
+          fallback={
+            <span className="grid h-20 w-20 place-items-center rounded-full text-4xl" style={{ background: badge.programColor }}>
+              {badge.kind === "merit" ? "🎖️" : "⚜️"}
+            </span>
+          }
+        />
         <div className="min-w-0 flex-1">
           <p className="sticker mb-2">
             {badge.programIcon} {badge.programName} · {badge.kind === "merit" ? "Merit badge" : "Rank"}

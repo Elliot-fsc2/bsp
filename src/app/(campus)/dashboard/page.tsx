@@ -4,6 +4,7 @@ import { requireUser } from "@/lib/auth";
 import { getDashboardData } from "@/lib/queries";
 import { getSettings } from "@/lib/settings";
 import { BadgeCard, PageHeader, StatCard } from "@/components/ui";
+import { BadgeImage } from "@/components/BadgeImage";
 import { Modal } from "@/components/Modal";
 import { toPlainText } from "@/lib/richtext";
 import { formatDate, greetingForNow, relativeTime } from "@/lib/utils";
@@ -84,7 +85,7 @@ export default async function DashboardPage() {
               <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                 {data.awarded.map((badge) => (
                   <Link key={badge.id} href={`/advancement/badge/${badge.badgeId}`} className="bloom-card flex items-center gap-3 p-3">
-                    {badge.badgeImage ? <img src={badge.badgeImage} alt="" className="h-12 w-12" /> : <span className="text-2xl">🎖️</span>}
+                    <BadgeImage src={badge.badgeImage} className="h-12 w-12" fallback={<span className="text-2xl">🎖️</span>} />
                     <span className="min-w-0">
                       <span className="block truncate text-sm font-extrabold">{badge.badgeName}</span>
                       <span className="block text-xs text-[var(--muted)]">{badge.programName}</span>

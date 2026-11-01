@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SubmissionResponses } from "@/components/SubmissionResponses";
+import { BadgeImage } from "@/components/BadgeImage";
 import { Avatar, PageHeader } from "@/components/ui";
 import { requireRole } from "@/lib/auth";
 import { getApprovalQueue } from "@/lib/queries";
@@ -55,11 +56,7 @@ export default async function ApprovalsPage() {
             {pending.map((item) => (
               <article key={item.id} className="bloom-card p-4">
                 <div className="flex flex-wrap items-center gap-3">
-                  {item.badgeImage ? (
-                    <img src={item.badgeImage} alt="" className="h-12 w-12" />
-                  ) : (
-                    <span className="text-2xl">🎖️</span>
-                  )}
+                  <BadgeImage src={item.badgeImage} className="h-12 w-12" fallback={<span className="text-2xl">🎖️</span>} />
                   <Avatar name={item.scoutName} color={item.scoutColor} size={36} />
                   <div className="min-w-0 flex-1">
                     <p className="font-extrabold">{item.requirementTitle ?? `${item.badgeName} — badge application`}</p>

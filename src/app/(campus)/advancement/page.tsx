@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BadgeImage } from "@/components/BadgeImage";
 import { BadgeCard, PageHeader, RankLadder } from "@/components/ui";
 import { requireUser } from "@/lib/auth";
 import { getAdvancement, getAwardedBadges } from "@/lib/queries";
@@ -68,11 +69,7 @@ export default async function AdvancementPage() {
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {awarded.map((badge) => (
               <Link key={badge.id} href={`/advancement/badge/${badge.badgeId}`} className="bloom-card flex items-center gap-3 p-4">
-                {badge.badgeImage ? (
-                  <img src={badge.badgeImage} alt="" className="h-14 w-14" />
-                ) : (
-                  <span className="text-3xl">🎖️</span>
-                )}
+                <BadgeImage src={badge.badgeImage} className="h-14 w-14" fallback={<span className="text-3xl">🎖️</span>} />
                 <div>
                   <p className="font-extrabold">{badge.badgeName}</p>
                   <p className="text-xs font-bold text-[var(--muted)]">{badge.programName}</p>
