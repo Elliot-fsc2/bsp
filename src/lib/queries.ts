@@ -11,7 +11,6 @@ import {
   forumPosts,
   forumTopics,
   notifications,
-  programSections,
   programs,
   submissions,
   users,
@@ -71,7 +70,7 @@ export type BadgeProgress = {
   canApply: boolean;
 };
 
-export type ProgramProgress = Awaited<ReturnType<typeof getPrograms>>[number] & {
+export type ProgramProgress = (typeof programs.$inferSelect) & {
   level: number;
   locked: boolean;
   lockedByName: string | null;
@@ -125,40 +124,13 @@ function parseQuiz(value: string | null): QuizQuestion[] | null {
   }
 }
 
-const programColumns = {
-  id: programs.id,
-  name: programs.name,
-  slug: programs.slug,
-  sectionId: programs.sectionId,
-  description: programs.description,
-  color: programs.color,
-  icon: programs.icon,
-  position: programs.position,
-  createdAt: programs.createdAt,
-  section: programSections.name,
-  ageRange: programSections.ageRange,
-};
-
 export async function getPrograms() {
-  return db
-    .select(programColumns)
-    .from(programs)
-    .leftJoin(programSections, eq(programs.sectionId, programSections.id))
-    .orderBy(asc(programs.position), asc(programs.id));
+  return db.select().from(programs).orderBy(asc(programs.position), asc(programs.id));
 }
 
 export async function getProgramBySlug(slug: string) {
-  const rows = await db
-    .select(programColumns)
-    .from(programs)
-    .leftJoin(programSections, eq(programs.sectionId, programSections.id))
-    .where(eq(programs.slug, slug))
-    .limit(1);
+  const rows = await db.select().from(programs).where(eq(programs.slug, slug)).limit(1);
   return rows[0] ?? null;
-}
-
-export async function getProgramSections() {
-  return db.select().from(programSections).orderBy(asc(programSections.position), asc(programSections.id));
 }
 
 export async function getAllBadges() {
@@ -833,20 +805,11 @@ export async function getAdminReport() {
 }
 
 export async function getAdminPrograms() {
-  return db
-    .select(programColumns)
-    .from(programs)
-    .leftJoin(programSections, eq(programs.sectionId, programSections.id))
-    .orderBy(asc(programs.position), asc(programs.id));
+  return db.select().from(programs).orderBy(asc(programs.position), asc(programs.id));
 }
 
 export async function getProgramById(id: number) {
-  const rows = await db
-    .select(programColumns)
-    .from(programs)
-    .leftJoin(programSections, eq(programs.sectionId, programSections.id))
-    .where(eq(programs.id, id))
-    .limit(1);
+  const rows = await db.select().from(programs).where(eq(programs.id, id)).limit(1);
   return rows[0] ?? null;
 }
 
