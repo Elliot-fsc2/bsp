@@ -3,7 +3,7 @@ import { BadgeForm } from "@/components/BadgeForm";
 import { Modal } from "@/components/Modal";
 import { PageHeader } from "@/components/ui";
 import { requireRole } from "@/lib/auth";
-import { createBadgeAction } from "@/actions/admin";
+import { createBadgeAction, deleteBadgeAction, updateBadgeAction } from "@/actions/admin";
 import { getAllBadges, getAdminPrograms, getBadgeCategories } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
@@ -44,7 +44,7 @@ export default async function AdminBadgesPage() {
             </h2>
             <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
               {programBadges.map((badge) => (
-                <Link key={badge.id} href={`/admin/badges/${badge.id}`} className="bloom-card flex items-center gap-3 p-3">
+                <div key={badge.id} className="bloom-card flex flex-wrap items-center gap-3 p-3">
                   {badge.imageUrl ? <img src={badge.imageUrl} alt="" className="h-10 w-10" /> : <span className="text-xl">🎖️</span>}
                   <div className="min-w-0 flex-1">
                     <p className="font-extrabold">{badge.name}</p>
@@ -53,8 +53,36 @@ export default async function AdminBadgesPage() {
                       {badge.categoryName ?? "Uncategorised"} · {Number(badge.requirementCount)} requirements
                     </p>
                   </div>
-                  <span className="text-sm font-extrabold text-[var(--secondary)]">Manage →</span>
-                </Link>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Link href={`/admin/badges/${badge.id}`} className="bloom-btn secondary">
+                      Manage →
+                    </Link>
+
+                    <Modal title={`Edit ${badge.name}`} size="lg" trigger="Edit" triggerClass="bloom-btn secondary">
+                      <BadgeForm
+                        action={updateBadgeAction.bind(null, badge.id)}
+                        badge={badge}
+                        programs={programs}
+                        categories={categories}
+                        submitLabel="Save badge"
+                      />
+                    </Modal>
+
+                    <Modal
+                      title={`Delete ${badge.name}?`}
+                      description="This removes the badge, its requirements, and all Scout submissions for it."
+                      size="sm"
+                      trigger="Delete"
+                      triggerClass="bloom-btn ghost"
+                    >
+                      <form action={deleteBadgeAction.bind(null, badge.id, "/admin/badges")}>
+                        <button className="bloom-btn" style={{ background: "#c1121f" }}>
+                          Yes, delete this badge
+                        </button>
+                      </form>
+                    </Modal>
+                  </div>
+                </div>
               ))}
             </div>
           </section>
