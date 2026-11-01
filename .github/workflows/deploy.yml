@@ -26,6 +26,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # The append-only guard below diffs against the pushed-from commit.
+          fetch-depth: 0
+
+      - name: Migrations are append-only
+        if: github.event_name == 'push' && github.event.before != '0000000000000000000000000000000000000000'
+        run: |
+          set -euo pipefail
+          base="${{ github.event.before }}"
+          if ! git cat-file -e "$base^{commit}" 2>/dev/null; then
+            echo "Base commit $base not in this clone; skipping."
+            exit 0
+          fi
+          changed="$(git diff --diff-filter=DM --name-only "$base" HEAD -- drizzle ':(exclude)drizzle/meta/_journal.json')"
+          if [ -n "$changed" ]; then
+            echo "These migrations were deleted or edited:" >&2
+            echo "$changed" >&2
+            echo "Production already ran these, so removing the file does not undo the change." >&2
+            echo "Add a new migration that reverses it (npx drizzle-kit generate --custom)." >&2
+            exit 1
+          fi
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -141,10 +162,14 @@ jobs:
 
           APP_PORT="$(sed -n 's/^PORT=//p' .env | tail -n 1 | tr -d '\"')"
           APP_PORT="${APP_PORT:-3000}"
+          # /api/health only runs `select 1`, so it stays green when the code and
+          # the migrated schema disagree. Render the landing page as well: it
+          # queries programs, which is what a bad migration breaks first.
           echo "Health checking on 127.0.0.1:${APP_PORT}"
 
           for _ in $(seq 1 30); do
-            if curl -fsS "http://127.0.0.1:${APP_PORT}/api/health" >/dev/null; then
+            if curl -fsS "http://127.0.0.1:${APP_PORT}/api/health" >/dev/null &&
+               curl -fsS -o /dev/null "http://127.0.0.1:${APP_PORT}/"; then
               echo "Health check passed"
               exit 0
             fi
