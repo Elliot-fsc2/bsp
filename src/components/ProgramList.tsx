@@ -3,13 +3,20 @@
 import { useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import Link from "next/link";
 import { GripVertical } from "lucide-react";
-import { deleteProgramAction, reorderProgramsAction, updateProgramAction } from "@/actions/admin";
+import {
+  deleteProgramAction,
+  deleteSectionAction,
+  reorderProgramsAction,
+  updateProgramAction,
+  updateSectionAction,
+} from "@/actions/admin";
 import { Modal } from "@/components/Modal";
 import { RichTextEditor } from "@/components/RichTextEditor";
 
 export type ProgramListItem = {
   id: number;
   name: string;
+  sectionId: number | null;
   section: string | null;
   ageRange: string | null;
   icon: string;
@@ -20,7 +27,62 @@ export type ProgramListItem = {
   meritCount: number;
 };
 
-export function ProgramList({ programs }: { programs: ProgramListItem[] }) {
+export type ProgramSectionItem = {
+  id: number;
+  name: string;
+  ageRange: string | null;
+};
+
+function SectionHeading({
+  name,
+  ageRange,
+  sectionId,
+}: {
+  name: string;
+  ageRange: string | null;
+  sectionId: number | null;
+}) {
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-2">
+      <div>
+        <h2 className="font-display text-lg">{name}</h2>
+        <p className="text-sm font-bold text-[var(--muted)]">{ageRange ?? "—"}</p>
+      </div>
+      {sectionId !== null ? (
+        <div className="flex flex-wrap gap-2">
+          <Modal title={`Edit ${name}`} size="sm" trigger="Edit section" triggerClass="bloom-btn secondary">
+            <form action={updateSectionAction.bind(null, sectionId)} className="space-y-3">
+              <input className="bloom-input" name="name" defaultValue={name} placeholder="Section name" />
+              <input className="bloom-input" name="ageRange" defaultValue={ageRange ?? ""} placeholder="Age range" />
+              <button className="bloom-btn">Save section</button>
+            </form>
+          </Modal>
+          <Modal
+            title={`Delete ${name}?`}
+            description="Programs in this section become unsectioned."
+            size="sm"
+            trigger="Delete section"
+            triggerClass="bloom-btn ghost"
+          >
+            <form action={deleteSectionAction.bind(null, sectionId)}>
+              <button className="bloom-btn" style={{ background: "#c1121f" }}>
+                Yes, delete this section
+              </button>
+            </form>
+          </Modal>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+export function ProgramList({
+  programs,
+  sections,
+}: {
+  programs: ProgramListItem[];
+  sections: ProgramSectionItem[];
+}) {
   const [order, setOrder] = useState<number[] | null>(null);
   const [dragId, setDragId] = useState<number | null>(null);
   const [slot, setSlot] = useState<number | null>(null);
@@ -39,10 +101,15 @@ export function ProgramList({ programs }: { programs: ProgramListItem[] }) {
     return listed;
   }, [order, programs]);
 
+  const emptySections = useMemo(
+    () => sections.filter((section) => !programs.some((program) => program.sectionId === section.id)),
+    [sections, programs],
+  );
+
   const beginDrag = (event: ReactPointerEvent<HTMLButtonElement>, index: number, id: number) => {
     event.preventDefault();
     event.currentTarget.setPointerCapture(event.pointerId);
-    const rows = Array.from(listRef.current?.children ?? []) as HTMLElement[];
+    const rows = Array.from(listRef.current?.querySelectorAll("[data-program-row]") ?? []) as HTMLElement[];
     rectsRef.current = rows.map((row) => row.getBoundingClientRect());
     fromRef.current = index;
     slotRef.current = index;
@@ -83,85 +150,106 @@ export function ProgramList({ programs }: { programs: ProgramListItem[] }) {
     <ol ref={listRef} className="space-y-2">
       {items.map((program, index) => (
         <li key={program.id} className="relative">
-          {index === 0 || items[index - 1].section !== program.section ? (
+          {index === 0 || items[index - 1].sectionId !== program.sectionId ? (
             <div className={index === 0 ? "mb-2" : "mt-5 mb-2"}>
-              <h2 className="font-display text-lg">{program.section ?? "Unsectioned"}</h2>
-              <p className="text-sm font-bold text-[var(--muted)]">{program.ageRange ?? "—"}</p>
+              <SectionHeading
+                name={program.section ?? "Unsectioned"}
+                ageRange={program.ageRange}
+                sectionId={program.sectionId}
+              />
             </div>
           ) : null}
 
-          {dragId !== null && slot === index && dragId !== program.id ? (
-            <span className="pointer-events-none absolute inset-x-0 -top-1 h-1.5 rounded-full bg-[var(--primary)]" />
-          ) : null}
+          <div className="relative">
+            {dragId !== null && slot === index && dragId !== program.id ? (
+              <span className="pointer-events-none absolute inset-x-0 -top-1 h-1.5 rounded-full bg-[var(--primary)]" />
+            ) : null}
 
-          <div
-            className={`bloom-card flex flex-wrap items-center gap-3 p-3 transition ${
-              dragId === program.id ? "opacity-60 ring-2 ring-[var(--primary)]" : ""
-            }`}
-          >
-            <button
-              type="button"
-              aria-label={`Drag ${program.name} to change its level`}
-              onPointerDown={(event) => beginDrag(event, index, program.id)}
-              onPointerMove={moveDrag}
-              onPointerUp={endDrag}
-              onPointerCancel={endDrag}
-              className="grid h-11 w-9 shrink-0 cursor-grab touch-none place-items-center rounded-xl bg-white text-[var(--muted)] active:cursor-grabbing"
+            <div
+              data-program-row
+              className={`bloom-card flex flex-wrap items-center gap-3 p-3 transition ${
+                dragId === program.id ? "opacity-60 ring-2 ring-[var(--primary)]" : ""
+              }`}
             >
-              <GripVertical size={18} />
-            </button>
-
-            <span className="sticker shrink-0">Level {index + 1}</span>
-
-            <span
-              className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl text-2xl"
-              style={{ background: `${program.color}33` }}
-            >
-              {program.icon}
-            </span>
-
-            <div className="min-w-0 flex-1">
-              <p className="font-extrabold">{program.name}</p>
-              <p className="text-xs text-[var(--muted)]">
-                {program.rankCount} ranks · {program.meritCount} merit badges
-              </p>
-              <p className="line-clamp-1 text-xs text-[var(--muted)]">{program.descriptionText || "No description"}</p>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2">
-              <Link href={`/admin/programs/${program.id}`} className="bloom-btn secondary">
-                Ranks &amp; badges →
-              </Link>
-
-              <Modal title={`Edit ${program.name}`} size="lg" trigger="Edit" triggerClass="bloom-btn secondary">
-                <form action={updateProgramAction.bind(null, program.id)} className="space-y-3">
-                  <input className="bloom-input" name="name" defaultValue={program.name} />
-                  <input className="bloom-input" name="section" defaultValue={program.section ?? ""} placeholder="Section" />
-                  <input className="bloom-input" name="ageRange" defaultValue={program.ageRange ?? ""} placeholder="Age range" />
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    <input className="bloom-input" name="icon" defaultValue={program.icon} placeholder="Icon" />
-                    <input className="bloom-input h-12" type="color" name="color" defaultValue={program.color} />
-                  </div>
-                  <RichTextEditor name="description" defaultValue={program.description ?? ""} minHeight={120} />
-                  <button className="bloom-btn">Save program</button>
-                </form>
-              </Modal>
-
-              <Modal
-                title={`Delete ${program.name}?`}
-                description="This also removes every rank, merit badge, and requirement in the program."
-                size="sm"
-                trigger="Delete"
-                triggerClass="bloom-btn ghost"
+              <button
+                type="button"
+                aria-label={`Drag ${program.name} to change its level`}
+                onPointerDown={(event) => beginDrag(event, index, program.id)}
+                onPointerMove={moveDrag}
+                onPointerUp={endDrag}
+                onPointerCancel={endDrag}
+                className="grid h-11 w-9 shrink-0 cursor-grab touch-none place-items-center rounded-xl bg-white text-[var(--muted)] active:cursor-grabbing"
               >
-                <form action={deleteProgramAction.bind(null, program.id)}>
-                  <button className="bloom-btn" style={{ background: "#c1121f" }}>
-                    Yes, delete this program
-                  </button>
-                </form>
-              </Modal>
+                <GripVertical size={18} />
+              </button>
+
+              <span className="sticker shrink-0">Level {index + 1}</span>
+
+              <span
+                className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl text-2xl"
+                style={{ background: `${program.color}33` }}
+              >
+                {program.icon}
+              </span>
+
+              <div className="min-w-0 flex-1">
+                <p className="font-extrabold">{program.name}</p>
+                <p className="text-xs text-[var(--muted)]">
+                  {program.rankCount} ranks · {program.meritCount} merit badges
+                </p>
+                <p className="line-clamp-1 text-xs text-[var(--muted)]">{program.descriptionText || "No description"}</p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <Link href={`/admin/programs/${program.id}`} className="bloom-btn secondary">
+                  Ranks &amp; badges →
+                </Link>
+
+                <Modal title={`Edit ${program.name}`} size="lg" trigger="Edit" triggerClass="bloom-btn secondary">
+                  <form action={updateProgramAction.bind(null, program.id)} className="space-y-3">
+                    <input className="bloom-input" name="name" defaultValue={program.name} />
+                    <select className="bloom-select" name="sectionId" defaultValue={program.sectionId ?? ""}>
+                      <option value="">No section</option>
+                      {sections.map((section) => (
+                        <option key={section.id} value={section.id}>
+                          {section.name}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <input className="bloom-input" name="icon" defaultValue={program.icon} placeholder="Icon" />
+                      <input className="bloom-input h-12" type="color" name="color" defaultValue={program.color} />
+                    </div>
+                    <RichTextEditor name="description" defaultValue={program.description ?? ""} minHeight={120} />
+                    <button className="bloom-btn">Save program</button>
+                  </form>
+                </Modal>
+
+                <Modal
+                  title={`Delete ${program.name}?`}
+                  description="This also removes every rank, merit badge, and requirement in the program."
+                  size="sm"
+                  trigger="Delete"
+                  triggerClass="bloom-btn ghost"
+                >
+                  <form action={deleteProgramAction.bind(null, program.id)}>
+                    <button className="bloom-btn" style={{ background: "#c1121f" }}>
+                      Yes, delete this program
+                    </button>
+                  </form>
+                </Modal>
+              </div>
             </div>
           </div>
+        </li>
+      ))}
+
+      {emptySections.map((section) => (
+        <li key={`section-${section.id}`} className="relative">
+          <div className="mt-5 mb-2">
+            <SectionHeading name={section.name} ageRange={section.ageRange} sectionId={section.id} />
+          </div>
+          <p className="bloom-card p-3 text-sm text-[var(--muted)]">No programs in this section yet.</p>
         </li>
       ))}
 

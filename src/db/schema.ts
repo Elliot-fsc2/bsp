@@ -34,12 +34,19 @@ export const sessions = mysqlTable("sessions", {
   expiresAt: timestamp("expires_at", { mode: "date" }).notNull(),
 });
 
+export const programSections = mysqlTable("program_sections", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 160 }).notNull(),
+  ageRange: varchar("age_range", { length: 80 }),
+  position: int("position").notNull().default(0),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+});
+
 export const programs = mysqlTable("programs", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 160 }).notNull(),
   slug: varchar("slug", { length: 160 }).notNull().unique(),
-  section: varchar("section", { length: 160 }),
-  ageRange: varchar("age_range", { length: 80 }),
+  sectionId: int("section_id").references(() => programSections.id),
   description: text("description"),
   color: varchar("color", { length: 32 }).notNull().default("#2d6a4f"),
   icon: varchar("icon", { length: 32 }).notNull().default("*"),
@@ -216,6 +223,7 @@ export const siteSettings = mysqlTable("site_settings", {
 });
 
 export type UserRow = typeof users.$inferSelect;
+export type ProgramSectionRow = typeof programSections.$inferSelect;
 export type ProgramRow = typeof programs.$inferSelect;
 export type BadgeCategoryRow = typeof badgeCategories.$inferSelect;
 export type BadgeRow = typeof badges.$inferSelect;

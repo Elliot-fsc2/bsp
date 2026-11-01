@@ -11,6 +11,7 @@ import {
   forumPosts,
   forumTopics,
   notifications,
+  programSections,
   programs,
   siteSettings,
   submissions,
@@ -93,12 +94,19 @@ export async function ensureSeeded() {
     { key: "faviconUrl", value: "/images/logo.svg" },
   ]);
 
+  await db.insert(programSections).values([
+    { name: "Kabataang Imumulat sa Diwa ng Scouting", ageRange: "6-9 years", position: 0 },
+    { name: "Boy Scout Program", ageRange: "10-12 years", position: 1 },
+    { name: "Senior Scout Program", ageRange: "13-16 years", position: 2 },
+  ]);
+  const sectionRows = await db.select().from(programSections);
+  const sectionByName = Object.fromEntries(sectionRows.map((section) => [section.name, section]));
+
   await db.insert(programs).values([
     {
       name: "KID Scout Program",
       slug: "kid-scouts",
-      section: "Kabataang Imumulat sa Diwa ng Scouting",
-      ageRange: "6-9 years",
+      sectionId: sectionByName["Kabataang Imumulat sa Diwa ng Scouting"]!.id,
       description: "The first steps in Scouting — songs, games, and simple promises for our youngest members.",
       color: "#52b788",
       icon: "🌱",
@@ -107,8 +115,7 @@ export async function ensureSeeded() {
     {
       name: "Boy Scout Program",
       slug: "boy-scouts",
-      section: "Boy Scout Program",
-      ageRange: "10-12 years",
+      sectionId: sectionByName["Boy Scout Program"]!.id,
       description:
         "The core Scouting program. Earn the Membership Rank first, then climb the ranks — Tenderfoot, Second Class, and First Class — collecting merit badges along the way.",
       color: "#2d6a4f",
@@ -118,8 +125,7 @@ export async function ensureSeeded() {
     {
       name: "Senior Scout Program",
       slug: "senior-scouts",
-      section: "Senior Scout Program",
-      ageRange: "13-16 years",
+      sectionId: sectionByName["Senior Scout Program"]!.id,
       description: "For older Scouts: leadership, signalling, service, and advanced outdoor skills.",
       color: "#1d4e89",
       icon: "🧭",

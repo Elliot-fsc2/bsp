@@ -13,6 +13,7 @@ import {
   badges,
   calendarEvents,
   forumTopics,
+  programSections,
   programs,
   submissions,
   users,
@@ -89,8 +90,7 @@ export async function createProgramAction(formData: FormData) {
   await db.insert(programs).values({
     name,
     slug: `${slugify(name)}-${Date.now().toString().slice(-4)}`,
-    section: String(formData.get("section") ?? "").trim() || null,
-    ageRange: String(formData.get("ageRange") ?? "").trim() || null,
+    sectionId: Number(formData.get("sectionId") ?? 0) || null,
     description: normalizeRich(formData.get("description")) || null,
     color: String(formData.get("color") ?? "#2d6a4f"),
     icon: String(formData.get("icon") ?? "*"),
@@ -106,13 +106,47 @@ export async function updateProgramAction(programId: number, formData: FormData)
     .update(programs)
     .set({
       name: String(formData.get("name") ?? "").trim() || "Program",
-      section: String(formData.get("section") ?? "").trim() || null,
-      ageRange: String(formData.get("ageRange") ?? "").trim() || null,
+      sectionId: Number(formData.get("sectionId") ?? 0) || null,
       description: normalizeRich(formData.get("description")) || null,
       color: String(formData.get("color") ?? "#2d6a4f"),
       icon: String(formData.get("icon") ?? "*"),
     })
     .where(eq(programs.id, programId));
+  revalidatePath("/admin/programs");
+  revalidatePath("/advancement");
+}
+
+export async function createSectionAction(formData: FormData) {
+  await requireRole(["admin"]);
+  const name = String(formData.get("name") ?? "").trim();
+  if (!name) return;
+  const existing = await db.select().from(programSections);
+  await db.insert(programSections).values({
+    name,
+    ageRange: String(formData.get("ageRange") ?? "").trim() || null,
+    position: existing.length,
+  });
+  revalidatePath("/admin/programs");
+  revalidatePath("/advancement");
+}
+
+export async function updateSectionAction(sectionId: number, formData: FormData) {
+  await requireRole(["admin"]);
+  await db
+    .update(programSections)
+    .set({
+      name: String(formData.get("name") ?? "").trim() || "Section",
+      ageRange: String(formData.get("ageRange") ?? "").trim() || null,
+    })
+    .where(eq(programSections.id, sectionId));
+  revalidatePath("/admin/programs");
+  revalidatePath("/advancement");
+}
+
+export async function deleteSectionAction(sectionId: number) {
+  await requireRole(["admin"]);
+  await db.update(programs).set({ sectionId: null }).where(eq(programs.sectionId, sectionId));
+  await db.delete(programSections).where(eq(programSections.id, sectionId));
   revalidatePath("/admin/programs");
   revalidatePath("/advancement");
 }
