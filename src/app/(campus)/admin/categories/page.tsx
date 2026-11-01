@@ -33,27 +33,25 @@ export default async function AdminCategoriesPage() {
         }
       />
 
-      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+      <div className="space-y-2">
         {categories.length === 0 ? (
           <p className="bloom-card p-6 text-[var(--muted)]">No categories yet.</p>
         ) : (
           categories.map((category) => {
             const count = badges.filter((badge) => badge.categoryId === category.id).length;
             return (
-              <div key={category.id} className="bloom-card flex flex-col gap-3 p-4">
-                <div className="flex items-center gap-3">
-                  <span className="grid h-12 w-12 place-items-center rounded-2xl text-2xl" style={{ background: `${category.color}33` }}>
-                    {category.icon}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="font-extrabold">{category.name}</p>
-                    <p className="text-xs text-[var(--muted)]">
-                      {count} badge{count === 1 ? "" : "s"}
-                    </p>
-                  </div>
+              <div key={category.id} className="bloom-card flex flex-wrap items-center gap-3 p-3">
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl text-2xl" style={{ background: `${category.color}33` }}>
+                  {category.icon}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="font-extrabold">{category.name}</p>
+                  <p className="text-xs text-[var(--muted)]">
+                    {count} badge{count === 1 ? "" : "s"}
+                  </p>
+                  <p className="line-clamp-1 text-xs text-[var(--muted)]">{toPlainText(category.description) || "No description"}</p>
                 </div>
-                <p className="line-clamp-2 text-sm text-[var(--muted)]">{toPlainText(category.description) || "No description"}</p>
-                <div className="mt-auto flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2">
                   <Modal
                     title={`Edit ${category.name}`}
                     size="lg"

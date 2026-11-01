@@ -42,7 +42,7 @@ export default async function AdminBadgesPage() {
             <h2 className="font-display mb-2 text-xl">
               {program.icon} {program.name}
             </h2>
-            <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+            <div className="space-y-2">
               {programBadges.map((badge) => (
                 <div key={badge.id} className="bloom-card flex flex-wrap items-center gap-3 p-3">
                   {badge.imageUrl ? <img src={badge.imageUrl} alt="" className="h-10 w-10" /> : <span className="text-xl">🎖️</span>}
