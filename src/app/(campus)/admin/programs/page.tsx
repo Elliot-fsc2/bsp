@@ -53,7 +53,7 @@ export default async function AdminProgramsPage() {
       />
 
       <p className="bloom-card mb-3 p-3 text-sm font-bold text-[var(--muted)]">
-        Drag the handle on the left of a program to change the level order.
+        Programs are grouped by section. Drag the handle on the left of a program to change the level order.
       </p>
 
       {items.length === 0 ? (

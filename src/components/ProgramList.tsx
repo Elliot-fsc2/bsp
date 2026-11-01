@@ -83,6 +83,13 @@ export function ProgramList({ programs }: { programs: ProgramListItem[] }) {
     <ol ref={listRef} className="space-y-2">
       {items.map((program, index) => (
         <li key={program.id} className="relative">
+          {index === 0 || items[index - 1].section !== program.section ? (
+            <div className={index === 0 ? "mb-2" : "mt-5 mb-2"}>
+              <h2 className="font-display text-lg">{program.section ?? "Unsectioned"}</h2>
+              <p className="text-sm font-bold text-[var(--muted)]">{program.ageRange ?? "—"}</p>
+            </div>
+          ) : null}
+
           {dragId !== null && slot === index && dragId !== program.id ? (
             <span className="pointer-events-none absolute inset-x-0 -top-1 h-1.5 rounded-full bg-[var(--primary)]" />
           ) : null}
@@ -116,8 +123,7 @@ export function ProgramList({ programs }: { programs: ProgramListItem[] }) {
             <div className="min-w-0 flex-1">
               <p className="font-extrabold">{program.name}</p>
               <p className="text-xs text-[var(--muted)]">
-                {program.section ? `${program.section} · ` : ""}
-                {program.ageRange ?? "—"} · {program.rankCount} ranks · {program.meritCount} merit badges
+                {program.rankCount} ranks · {program.meritCount} merit badges
               </p>
               <p className="line-clamp-1 text-xs text-[var(--muted)]">{program.descriptionText || "No description"}</p>
             </div>
