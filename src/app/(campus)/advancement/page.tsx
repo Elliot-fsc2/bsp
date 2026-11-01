@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { AdvancementRanks, type AdvancementProgram } from "@/components/AdvancementRanks";
 import { BadgeImage } from "@/components/BadgeImage";
-import { BadgeCard, PageHeader, RankLadder } from "@/components/ui";
+import { BadgeCard, type BadgeCardData, PageHeader } from "@/components/ui";
 import { requireUser } from "@/lib/auth";
 import { getAdvancement, getAwardedBadges } from "@/lib/queries";
 
@@ -14,6 +15,49 @@ export default async function AdvancementPage() {
   ]);
   const inProgress = badges.filter((badge) => !badge.earned && badge.satisfiedCount > 0);
   const readyToApply = badges.filter((badge) => badge.canApply);
+
+  const rankCards: BadgeCardData[] = badges
+    .filter((badge) => badge.kind === "rank")
+    .map((badge) => ({
+      id: badge.id,
+      name: badge.name,
+      kind: badge.kind,
+      description: badge.description,
+      imageUrl: badge.imageUrl,
+      isMembership: badge.isMembership,
+      programId: badge.programId,
+      programName: badge.programName,
+      programColor: badge.programColor,
+      programIcon: badge.programIcon,
+      categoryName: badge.categoryName,
+      categoryColor: badge.categoryColor,
+      categoryIcon: badge.categoryIcon,
+      rankStep: badge.rankStep,
+      rankCount: badge.rankCount,
+      locked: badge.locked,
+      lockedByName: badge.lockedByName,
+      canApply: badge.canApply,
+      requiredBy: badge.requiredBy.map((rank) => ({ id: rank.id, name: rank.name })),
+      satisfiedCount: badge.satisfiedCount,
+      totalCount: badge.totalCount,
+      percent: badge.percent,
+      earned: badge.earned,
+      applicationStatus: badge.applicationStatus,
+    }));
+
+  const programOptions: AdvancementProgram[] = programs.map((program) => ({
+    id: program.id,
+    name: program.name,
+    icon: program.icon,
+    slug: program.slug,
+    ageRange: program.ageRange,
+    level: program.level,
+    locked: program.locked,
+    lockedByName: program.lockedByName,
+    complete: program.complete,
+    ranksEarned: program.ranksEarned,
+    ranksTotal: program.ranksTotal,
+  }));
 
   return (
     <div>
@@ -80,45 +124,7 @@ export default async function AdvancementPage() {
         </section>
       ) : null}
 
-      {programs.map((program) => {
-        const ranks = badges
-          .filter((badge) => badge.programId === program.id && badge.kind === "rank")
-          .sort((a, b) => a.position - b.position);
-        return (
-          <section key={program.id} className={`mb-8 ${program.locked ? "opacity-80" : ""}`}>
-            <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
-              <div>
-                <p className="mb-2 flex flex-wrap items-center gap-2">
-                  <span className="sticker">Level {program.level}</span>
-                  {program.complete ? <span className="sticker bg-[#d8f3dc]">Program complete</span> : null}
-                  {program.locked ? <span className="sticker bg-[#ffe0e8]">🔒 Locked</span> : null}
-                </p>
-                <h2 className="font-display text-2xl">
-                  {program.icon} {program.name}
-                </h2>
-                <p className="text-sm text-[var(--muted)]">
-                  {program.ageRange} · {program.ranksEarned}/{program.ranksTotal} ranks earned
-                </p>
-              </div>
-              {program.locked ? null : (
-                <Link href={`/advancement/${program.slug}`} className="text-sm font-extrabold text-[var(--secondary)]">
-                  Program details →
-                </Link>
-              )}
-            </div>
-            {program.locked ? (
-              <p className="bloom-card mb-3 p-3 text-sm font-bold text-[var(--muted)]">
-                🔒 Level {program.level} opens when you finish <strong>{program.lockedByName}</strong>. You can see the
-                trail ahead, but it is not open yet.
-              </p>
-            ) : null}
-            <h3 className="mb-2 text-xs font-extrabold tracking-wide text-[var(--muted)] uppercase">
-              Ranks — earn them in order
-            </h3>
-            <RankLadder ranks={ranks} disabled={program.locked} />
-          </section>
-        );
-      })}
+      <AdvancementRanks programs={programOptions} ranks={rankCards} />
     </div>
   );
 }
